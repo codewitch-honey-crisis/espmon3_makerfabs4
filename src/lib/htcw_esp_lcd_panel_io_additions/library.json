@@ -1,0 +1,23 @@
+{
+    "name": "htcw_esp_lcd_io_additions",
+    "version": "0.1.0",
+    "description": "The I/O expander component from the espressif registry packaged for PIO",
+    "keywords": ["io","lcd"],
+    "authors": {
+        "name":"honey the codewitch",
+        "homepage": "https://www.codeproject.com/Members/code-witch"
+    },
+    "license": "MIT",
+    "frameworks": "*",
+    "platforms": "espressif32",
+
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/codewitch-honey-crisis/htcw_esp_lcd_io_additions.git"
+    },
+    "dependencies": {
+        "codewitch-honey-crisis/htcw_esp_io_expander": "^0.1.0"
+    }
+
+}

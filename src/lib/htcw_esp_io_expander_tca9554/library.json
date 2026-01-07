@@ -1,0 +1,23 @@
+{
+    "name": "htcw_esp_io_expander_tca9554",
+    "version": "0.1.0",
+    "description": "The TCA9554 I/O expander component from the espressif registry packaged for PIO",
+    "keywords": ["io","expander","tca9554"],
+    "authors": {
+        "name":"honey the codewitch",
+        "homepage": "https://www.codeproject.com/Members/code-witch"
+    },
+    "license": "MIT",
+    "frameworks": "*",
+    "platforms": "espressif32",
+
+    "repository":
+    {
+        "type": "git",
+        "url": "https://github.com/codewitch-honey-crisis/htcw_esp_io_expander_tca9554.git"
+    },
+    "dependencies": {
+        "codewitch-honey-crisis/htcw_esp_io_expander": "^0.1.0"
+    }
+
+}
