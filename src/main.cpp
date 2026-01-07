@@ -470,11 +470,15 @@ extern "C" void app_main() {
     srect16 b = cpu_label.bounds();
     cpu_usage_label.bounds(srect16(b.x2+2,b.y1,b.x2+1+(main_screen.dimensions().width/5),b.height()/2+b.y1));
     cpu_usage_label.text("---");
+    cpu_usage_label.font(text_font_stm);
+    cpu_usage_label.color(uix_color_t::white);
     strcpy(cpu_usage_text,"---");
     main_screen.register_control(cpu_usage_label);
     b = cpu_usage_label.bounds();
     cpu_heat_label.bounds(srect16(b.x1,b.y2+1,b.x2,b.y2+b.height()));
     cpu_heat_label.text("---");
+    cpu_heat_label.font(text_font_stm);
+    cpu_heat_label.color(uix_color_t::white);
     strcpy(cpu_heat_text,"---");
     main_screen.register_control(cpu_heat_label);
 
@@ -506,11 +510,14 @@ extern "C" void app_main() {
     b = gpu_label.bounds();
     gpu_usage_label.bounds(srect16(b.x2+2,b.y1,b.x2+1+(main_screen.dimensions().width/5),b.height()/2+b.y1));
     gpu_usage_label.text("---");
+    gpu_usage_label.color(uix_color_t::white);
     strcpy(gpu_usage_text,"---");
     main_screen.register_control(gpu_usage_label);
     b = gpu_usage_label.bounds();
     gpu_heat_label.bounds(srect16(b.x1,b.y2+1,b.x2,b.y2+b.height()));
     gpu_heat_label.text("---"); // \xC2\xB0
+    gpu_heat_label.color(uix_color_t::white);
+    gpu_heat_label.font(text_font_stm);
     strcpy(gpu_heat_text,"---");
     main_screen.register_control(gpu_heat_label);
     
@@ -549,6 +556,8 @@ extern "C" void app_main() {
     disconnected_label.bounds(srect16(0,0,main_screen.dimensions().width/2,main_screen.dimensions().width/8).center(main_screen.bounds()));
     rgba_pixel<32> bg = uix_color_t::black;
     bg.opacity_inplace(.6f);
+    disconnected_label.font(text_font_stm);
+    disconnected_label.color(uix_color_t::white);
     disconnected_label.background_color(bg);
     disconnected_label.text("[ disconnected ]");
     main_screen.register_control(disconnected_label);
