@@ -131,7 +131,7 @@
 #define LCD_VSYNC_BACK_PORCH 10
 #define LCD_CLK_ACTIVE_NEG 1
 #define LCD_CLK_ON_LEVEL 1
-#define LCD_DE_ON_LEVEL 0
+#define LCD_DE_ON_LEVEL 1
 #define LCD_BIT_DEPTH 16
 #define LCD_INIT esp_lcd_new_panel_st7701
 #define LCD_HRES 480
