@@ -55,7 +55,6 @@
     static uint8_t st7701_init_data_29[] = {0x77,0x01,0x00,0x00,0x13};\
     static uint8_t st7701_init_data_30[] = {0xE4};\
     static uint8_t st7701_init_data_31[] = {0x77,0x01,0x00,0x00,0x00};\
-    static uint8_t st7701_init_data_32[] = {0x60};\
     static st7701_lcd_init_cmd_t st7701_lcd_init_cmds[] = {\
         {0xFF, st7701_init_data_1, 5, 0},\
         {0xC0, st7701_init_data_2, 2, 0},\
