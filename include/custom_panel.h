@@ -56,40 +56,40 @@
     static uint8_t st7701_init_data_30[] = {0xE4};\
     static uint8_t st7701_init_data_31[] = {0x77,0x01,0x00,0x00,0x00};\
     static st7701_lcd_init_cmd_t st7701_lcd_init_cmds[] = {\
-        {0xFF, st7701_init_data_1, 5, 0},\
-        {0xC0, st7701_init_data_2, 2, 0},\
-        {0xC3, st7701_init_data_3, 3, 0},\
-        {0xFF, st7701_init_data_4, 5, 0},\
-        {0xC1, st7701_init_data_5, 2, 0},\
-        {0xC2, st7701_init_data_6, 2, 0},\
-        {0xCD, st7701_init_data_7, 1, 0},\
-        {0xB0, st7701_init_data_8, 16, 0},\
-        {0xB1, st7701_init_data_9, 16, 0},\
-        {0xFF, st7701_init_data_10, 5, 0},\
-        {0xB0, st7701_init_data_11, 1, 0},\
-        {0xB1, st7701_init_data_12, 1, 0},\
-        {0xB2, st7701_init_data_13, 1, 0},\
-        {0xB3, st7701_init_data_14, 1, 0},\
-        {0xB5, st7701_init_data_15, 1, 0},\
-        {0xB7, st7701_init_data_16, 1, 0},\
-        {0xB8, st7701_init_data_17, 1, 0},\
-        {0xC1, st7701_init_data_18, 1, 0},\
-        {0xC2, st7701_init_data_18, 1, 0},\
-        {0xE0, st7701_init_data_19, 3, 0},\
-        {0xE1, st7701_init_data_20, 11, 0},\
-        {0xE2, st7701_init_data_21, 12, 0},\
-        {0xE3, st7701_init_data_22, 4, 0},\
-        {0xE4, st7701_init_data_23, 2, 0},\
-        {0xE5, st7701_init_data_24, 16, 0},\
-        {0xE6, st7701_init_data_22, 4, 0},\
-        {0xE7, st7701_init_data_23, 2, 0},\
-        {0xE8, st7701_init_data_25, 16, 0},\
-        {0xEB, st7701_init_data_26, 7, 0},\
-        {0xEC, st7701_init_data_27, 2, 0},\
-        {0xED, st7701_init_data_28, 16, 0},\
-        {0xFF, st7701_init_data_29, 5, 0},\
-        {0xE5, st7701_init_data_30, 1, 0},\
-        {0xFF, st7701_init_data_31, 5, 0},\
+        {0xFF, st7701_init_data_1, sizeof(st7701_init_data_1), 0},\
+        {0xC0, st7701_init_data_2, sizeof(st7701_init_data_2), 0},\
+        {0xC3, st7701_init_data_3, sizeof(st7701_init_data_3), 0},\
+        {0xFF, st7701_init_data_4, sizeof(st7701_init_data_4), 0},\
+        {0xC1, st7701_init_data_5, sizeof(st7701_init_data_5), 0},\
+        {0xC2, st7701_init_data_6, sizeof(st7701_init_data_6), 0},\
+        {0xCD, st7701_init_data_7, sizeof(st7701_init_data_7), 0},\
+        {0xB0, st7701_init_data_8, sizeof(st7701_init_data_8), 0},\
+        {0xB1, st7701_init_data_9, sizeof(st7701_init_data_9), 0},\
+        {0xFF, st7701_init_data_10, sizeof(st7701_init_data_10), 0},\
+        {0xB0, st7701_init_data_11, sizeof(st7701_init_data_11), 0},\
+        {0xB1, st7701_init_data_12, sizeof(st7701_init_data_12), 0},\
+        {0xB2, st7701_init_data_13, sizeof(st7701_init_data_13), 0},\
+        {0xB3, st7701_init_data_14, sizeof(st7701_init_data_14), 0},\
+        {0xB5, st7701_init_data_15, sizeof(st7701_init_data_15), 0},\
+        {0xB7, st7701_init_data_16, sizeof(st7701_init_data_16), 0},\
+        {0xB8, st7701_init_data_17, sizeof(st7701_init_data_17), 0},\
+        {0xC1, st7701_init_data_18, sizeof(st7701_init_data_18), 0},\
+        {0xC2, st7701_init_data_18, sizeof(st7701_init_data_18), 0},\
+        {0xE0, st7701_init_data_19, sizeof(st7701_init_data_19), 0},\
+        {0xE1, st7701_init_data_20, sizeof(st7701_init_data_20), 0},\
+        {0xE2, st7701_init_data_21, sizeof(st7701_init_data_21), 0},\
+        {0xE3, st7701_init_data_22, sizeof(st7701_init_data_22), 0},\
+        {0xE4, st7701_init_data_23, sizeof(st7701_init_data_23), 0},\
+        {0xE5, st7701_init_data_24, sizeof(st7701_init_data_24), 0},\
+        {0xE6, st7701_init_data_22, sizeof(st7701_init_data_22), 0},\
+        {0xE7, st7701_init_data_23, sizeof(st7701_init_data_23), 0},\
+        {0xE8, st7701_init_data_25, sizeof(st7701_init_data_25), 0},\
+        {0xEB, st7701_init_data_26, sizeof(st7701_init_data_26), 0},\
+        {0xEC, st7701_init_data_27, sizeof(st7701_init_data_27), 0},\
+        {0xED, st7701_init_data_28, sizeof(st7701_init_data_28), 0},\
+        {0xFF, st7701_init_data_29, sizeof(st7701_init_data_29), 0},\
+        {0xE5, st7701_init_data_30, sizeof(st7701_init_data_30), 0},\
+        {0xFF, st7701_init_data_31, sizeof(st7701_init_data_31), 0},\
         {0x21, 0, 0, 0},\
         {0x11, NULL, 0, 120},\
     };\
@@ -104,30 +104,30 @@
 #define LCD_PIN_NUM_VSYNC 4
 #define LCD_PIN_NUM_HSYNC 5
 #define LCD_PIN_NUM_CLK 21
-#define LCD_PIN_NUM_D00 6
-#define LCD_PIN_NUM_D01 7
-#define LCD_PIN_NUM_D02 15
-#define LCD_PIN_NUM_D03 16
-#define LCD_PIN_NUM_D04 8
+#define LCD_PIN_NUM_D00 39
+#define LCD_PIN_NUM_D01 40
+#define LCD_PIN_NUM_D02 41
+#define LCD_PIN_NUM_D03 42
+#define LCD_PIN_NUM_D04 2
 #define LCD_PIN_NUM_D05 0
 #define LCD_PIN_NUM_D06 9
 #define LCD_PIN_NUM_D07 14
 #define LCD_PIN_NUM_D08 47
 #define LCD_PIN_NUM_D09 48
 #define LCD_PIN_NUM_D10 3
-#define LCD_PIN_NUM_D11 39
-#define LCD_PIN_NUM_D12 40
-#define LCD_PIN_NUM_D13 41
-#define LCD_PIN_NUM_D14 42
-#define LCD_PIN_NUM_D15 2
+#define LCD_PIN_NUM_D11 6
+#define LCD_PIN_NUM_D12 7
+#define LCD_PIN_NUM_D13 15
+#define LCD_PIN_NUM_D14 16
+#define LCD_PIN_NUM_D15 8
 #define LCD_PIN_NUM_BCKL -1
-#define LCD_DATA_ENDIAN_LITTLE 1
+#define LCD_DATA_ENDIAN_LITTLE 0
 #define LCD_HSYNC_FRONT_PORCH 10
 #define LCD_HSYNC_PULSE_WIDTH 8
-#define LCD_HSYNC_BACK_PORCH 10
+#define LCD_HSYNC_BACK_PORCH 50
 #define LCD_VSYNC_FRONT_PORCH 40
 #define LCD_VSYNC_PULSE_WIDTH 8
-#define LCD_VSYNC_BACK_PORCH 10
+#define LCD_VSYNC_BACK_PORCH 20
 #define LCD_CLK_ACTIVE_NEG 1
 #define LCD_CLK_ON_LEVEL 1
 #define LCD_DE_ON_LEVEL 1
