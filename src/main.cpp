@@ -21,8 +21,7 @@ void panel_lcd_flush_complete(void) {
 }
 #endif
 // flush a bitmap to the display
-static void uix_on_flush(const rect16& bounds,
-                             const void *bitmap, void* state) {
+static void uix_on_flush(const rect16& bounds,const void *bitmap, void* state) {
     //printf("flush (%d, %d)-(%d, %d)\n",bounds.x1, bounds.y1, bounds.x2, bounds.y2);
     panel_lcd_flush(bounds.x1, bounds.y1, bounds.x2, bounds.y2,
                               (void *)bitmap);
@@ -30,15 +29,53 @@ static void uix_on_flush(const rect16& bounds,
     disp.flush_complete();
 #endif
 }
-
-
+#ifdef TOUCH_BUS
+void uix_on_touch(point16* out_locations,size_t* in_out_locations_size,void* state) {
+    uint16_t x[10],y[10],s[10];
+    if(*in_out_locations_size>10) {
+        *in_out_locations_size = 10;
+    }
+    panel_touch_update();
+    panel_touch_read(in_out_locations_size,x,y,s);
+    for(size_t i = 0;i<*in_out_locations_size;++i)  {
+        out_locations[i] = point16(x[i],y[i]);
+    }
+    char sz[32];
+    if(*in_out_locations_size) {
+        fputs("Touch:",stdout);
+        for(size_t i = 0;i<*in_out_locations_size;++i)  {
+            fputs(" (",stdout);
+            fputs(itoa(x[i],sz,10),stdout);
+            fputs(", ",stdout);
+            fputs(itoa(y[i],sz,10),stdout);
+            fputs(")",stdout);
+        }
+        putchar('\n');
+    }
+}
+#endif
 const_buffer_stream text_font_stm(bungee,sizeof(bungee));
+
+
 #if LCD_COLOR_SPACE == LCD_COLOR_GSC
 #define PIXEL gsc_pixel
 #elif (LCD_COLOR_SPACE == LCD_COLOR_RGB || LCD_COLOR_SPACE == LCD_COLOR_BGR) 
 #define PIXEL rgb_pixel
 #endif
-using screen_t = screen_ex<bitmap<PIXEL<LCD_BIT_DEPTH>>,LCD_X_ALIGN,LCD_Y_ALIGN>;
+#if LCD_BIT_DEPTH==18
+using pixel_t = pixel<
+    channel_traits<channel_name::nop,2>,
+    channel_traits<channel_name::R,6>,
+    channel_traits<channel_name::nop,2>,
+    channel_traits<channel_name::G,6>,
+    channel_traits<channel_name::nop,2>,
+    channel_traits<channel_name::B,6>
+>;
+#else 
+using pixel_t = PIXEL<LCD_BIT_DEPTH>;
+#endif
+using screen_t = screen_ex<bitmap<pixel_t>,LCD_X_ALIGN,LCD_Y_ALIGN>;
+
 using color_t = color<screen_t::pixel_type>;
 using uix_color_t = color<uix_pixel>;
 using vcolor_t = color<vector_pixel>;
@@ -428,7 +465,7 @@ static char gpu_heat_text[32];
     
 static label_t disconnected_label;
 
-void loop();
+static void loop();
 static void loop_task(void* arg) {
     TickType_t wdt_ts = xTaskGetTickCount();
     while(1) {
@@ -453,6 +490,9 @@ extern "C" void app_main() {
     panel_expander_init();
 #endif
     panel_lcd_init();
+#ifdef TOUCH_BUS
+    panel_touch_init();
+#endif
     serial_init();
     disp.buffer_size(LCD_TRANSFER_SIZE);
     disp.buffer1((uint8_t*)panel_lcd_transfer_buffer());
@@ -460,7 +500,9 @@ extern "C" void app_main() {
     disp.buffer2((uint8_t*)panel_lcd_transfer_buffer2());
 #endif
     disp.on_flush_callback(uix_on_flush);
-    disp.on_touch_callback(nullptr);
+#ifdef TOUCH_BUS
+    disp.on_touch_callback(uix_on_touch);
+#endif
     main_screen.dimensions({LCD_WIDTH,LCD_HEIGHT});
     main_screen.background_color(gfx::color<typename screen_t::pixel_type>::black);
     cpu_label.bounds(srect16(0,0,(main_screen.dimensions().width)/10-1,main_screen.dimensions().height/4).inflate(-2,-4));
@@ -565,13 +607,11 @@ extern "C" void app_main() {
 
     disp.active_screen(main_screen);
     refresh_display();
-#ifndef ARDUINO
     TaskHandle_t loop_handle;
     xTaskCreate(loop_task,"loop_task",4096,nullptr,20,&loop_handle);
-#endif
 }
 
-void loop() {
+static void loop() {
     struct to_avg {
         float g0,g1,g2,g3;
     };
@@ -660,7 +700,7 @@ void loop() {
         history_graph.add_data(2,total.g2);
         history_graph.add_data(3,total.g3);
         refresh_display();
-    }
+    } 
     
     if(ts_count>=10 && !disconnected_label.visible()) { // 1 second
         ts_count = 0;
@@ -686,5 +726,5 @@ void loop() {
         disconnected_label.visible(true);
         refresh_display();
     }
-
+    disp.update();
 }
