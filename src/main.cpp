@@ -510,6 +510,7 @@ extern "C" void app_main() {
     b = gpu_label.bounds();
     gpu_usage_label.bounds(srect16(b.x2+2,b.y1,b.x2+1+(main_screen.dimensions().width/5),b.height()/2+b.y1));
     gpu_usage_label.text("---");
+    gpu_usage_label.font(text_font_stm);
     gpu_usage_label.color(uix_color_t::white);
     strcpy(gpu_usage_text,"---");
     main_screen.register_control(gpu_usage_label);

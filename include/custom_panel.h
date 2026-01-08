@@ -99,7 +99,7 @@
     vendor_config.flags.use_mipi_interface = 0;\
     vendor_config.rgb_config = &rgb_panel_cfg;\
     vendor_config.flags.auto_del_panel_io = 0;\
-    vendor_config.flags.mirror_by_cmd = 0;
+    vendor_config.flags.mirror_by_cmd = 1;
 #define LCD_PIN_NUM_DE 45
 #define LCD_PIN_NUM_VSYNC 4
 #define LCD_PIN_NUM_HSYNC 5
@@ -136,7 +136,7 @@
 #define LCD_HRES 480
 #define LCD_VRES 480
 #define LCD_INVERT_COLOR 0
-#define LCD_COLOR_SPACE LCD_COLOR_RGB
+#define LCD_COLOR_SPACE LCD_COLOR_BGR
 #define LCD_SWAP_COLOR_BYTES 0
 #define LCD_TRANSFER_IN_SPIRAM
 #define LCD_CLOCK_HZ (16 * 1000 * 1000)
