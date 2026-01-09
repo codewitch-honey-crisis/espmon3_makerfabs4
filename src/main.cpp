@@ -424,8 +424,6 @@ protected:
                 float fv = v/255.f;
                 float y = (1.0-fv)*(tenth_y*10);
                 pointf pt(b.x1,y);
-                pixel_t px;
-                convert(entry->color,&px);
                 for(int i = 1;i<entry->buffer.size();++i) {
                     v = *entry->buffer.peek(i);
                     fv = v/255.f;
@@ -433,7 +431,7 @@ protected:
                     pt2.x+=(tenth_x*.1f);
                     y = (1.f-fv)*(tenth_y*10);
                     pt2.y =y;
-                    draw::line(destination,srect16(roundf(pt.x),roundf(pt.y),roundf(pt2.x),roundf(pt2.y)),px);
+                    draw::line(destination,srect16(floorf(pt.x),floorf(pt.y),ceilf(pt2.x),ceilf(pt2.y)),entry->color);
                     pt=pt2;
                 }
             }
