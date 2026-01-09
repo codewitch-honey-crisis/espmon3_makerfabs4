@@ -314,6 +314,8 @@ protected:
     }
 };
 using bar_t = bar<screen_t::control_surface_type>;
+
+#if LCD_HEIGHT>128
 template<typename ControlSurfaceType>
 class vgraph : public control<ControlSurfaceType> {
     using base_type = control<ControlSurfaceType>;
@@ -422,6 +424,8 @@ protected:
                 float fv = v/255.f;
                 float y = (1.0-fv)*(tenth_y*10);
                 pointf pt(b.x1,y);
+                pixel_t px;
+                convert(entry->color,&px);
                 for(int i = 1;i<entry->buffer.size();++i) {
                     v = *entry->buffer.peek(i);
                     fv = v/255.f;
@@ -429,7 +433,7 @@ protected:
                     pt2.x+=(tenth_x*.1f);
                     y = (1.f-fv)*(tenth_y*10);
                     pt2.y =y;
-                    draw::line(destination,srect16(roundf(pt.x),roundf(pt.y),roundf(pt2.x),roundf(pt2.y)),entry->color);
+                    draw::line(destination,srect16(roundf(pt.x),roundf(pt.y),roundf(pt2.x),roundf(pt2.y)),px);
                     pt=pt2;
                 }
             }
@@ -437,6 +441,7 @@ protected:
     }
 };
 using graph_t = vgraph<screen_t::control_surface_type>;
+#endif
 
 static screen_t main_screen;
 static vert_label_t cpu_label;
@@ -456,7 +461,9 @@ static bar_t gpu_heat_bar;
 
 static vert_label_t gpu_usage_meter;
 
+#if LCD_HEIGHT > 128
 static graph_t history_graph;
+#endif
 
 static char cpu_usage_text[32];
 static char cpu_heat_text[32];
@@ -493,6 +500,9 @@ extern "C" void app_main() {
 #ifdef TOUCH_BUS
     panel_touch_init();
 #endif
+#ifdef BUTTON
+    panel_button_init();
+#endif
     serial_init();
     disp.buffer_size(LCD_TRANSFER_SIZE);
     disp.buffer1((uint8_t*)panel_lcd_transfer_buffer());
@@ -503,9 +513,14 @@ extern "C" void app_main() {
 #ifdef TOUCH_BUS
     disp.on_touch_callback(uix_on_touch);
 #endif
+#if LCD_HEIGHT > 128
+    static const int section_height_divisor = 4;
+#else
+    static const int section_height_divisor = 2;
+#endif
     main_screen.dimensions({LCD_WIDTH,LCD_HEIGHT});
     main_screen.background_color(gfx::color<typename screen_t::pixel_type>::black);
-    cpu_label.bounds(srect16(0,0,(main_screen.dimensions().width)/10-1,main_screen.dimensions().height/4).inflate(-2,-4));
+    cpu_label.bounds(srect16(0,0,(main_screen.dimensions().width)/10-1,main_screen.dimensions().height/section_height_divisor).inflate(-2,-4));
     cpu_label.text("CPU");
     cpu_label.color(uix_color_t::light_blue);
     main_screen.register_control(cpu_label);
@@ -537,15 +552,21 @@ extern "C" void app_main() {
     b.x2 = main_screen.dimensions().width-1;
     b.y2-=2;
     cpu_heat_bar.bounds(b);
+#if LCD_BIT_DEPTH == 1
+    auto px = uix_color_t::white;
+#else
     auto px = uix_color_t::orange;
+#endif
     cpu_heat_bar.color(px);
+#if LCD_BIT_DEPTH > 1
     cpu_heat_bar.is_gradient(true);
     cpu_heat_bar.back_color(px.opacity(.125));
+#endif
     cpu_heat_bar.value(0);
     main_screen.register_control(cpu_heat_bar);
     
 
-    gpu_label.bounds(cpu_label.bounds().offset(0,main_screen.dimensions().height/4+3));
+    gpu_label.bounds(cpu_label.bounds().offset(0,main_screen.dimensions().height/section_height_divisor+3));
     gpu_label.color(uix_color_t::light_salmon);
     gpu_label.text("GPU");
     main_screen.register_control(gpu_label);
@@ -570,8 +591,12 @@ extern "C" void app_main() {
     b.y2-=2;
     gpu_usage_bar.bounds(b);
     gpu_usage_bar.value(0);
+#if LCD_BIT_DEPTH == 1
+    gpu_usage_bar.color(uix_color_t::white);
+#else
     gpu_usage_bar.color(uix_color_t::pale_goldenrod);
     gpu_usage_bar.back_color(uix_color_t::pale_goldenrod.opacity(.125));
+#endif
     main_screen.register_control(gpu_usage_bar);
 
     b=gpu_heat_label.bounds();
@@ -579,14 +604,22 @@ extern "C" void app_main() {
     b.x2 = main_screen.dimensions().width-1;
     b.y2-=2;
     gpu_heat_bar.bounds(b);
+#if LCD_BIT_DEPTH==1
+    px = uix_color_t::white;
+#else
     px = uix_color_t::purple;
+#endif
     gpu_heat_bar.color(px);
+#if LCD_BIT_DEPTH == 1
+    gpu_heat_bar.color(px);
+#else
     gpu_heat_bar.is_gradient(true);
     gpu_heat_bar.back_color(px.opacity(.125));
+#endif
     gpu_heat_bar.value(0);
     main_screen.register_control(gpu_heat_bar);
     
-
+#if LCD_HEIGHT>128
     b = main_screen.bounds();
     b.y1=main_screen.dimensions().height/2+1;
     history_graph.bounds(b);
@@ -595,14 +628,15 @@ extern "C" void app_main() {
     history_graph.add_line(gpu_usage_bar.color());
     history_graph.add_line(gpu_heat_bar.color());
     main_screen.register_control(history_graph);
-
+#endif
     disconnected_label.bounds(srect16(0,0,main_screen.dimensions().width/2,main_screen.dimensions().width/8).center(main_screen.bounds()));
     rgba_pixel<32> bg = uix_color_t::black;
-    bg.opacity_inplace(.6f);
+    //bg.opacity_inplace(.6f);
     disconnected_label.font(text_font_stm);
     disconnected_label.color(uix_color_t::white);
     disconnected_label.background_color(bg);
     disconnected_label.text("[ disconnected ]");
+    disconnected_label.text_justify(uix_justify::center);
     main_screen.register_control(disconnected_label);
 
     disp.active_screen(main_screen);
@@ -680,6 +714,7 @@ static void loop() {
         
         ++index;
     }
+#if LCD_HEIGHT>128
     if(index>=5 && !disconnected_label.visible()) {
         index = 0;
         to_avg total;
@@ -701,7 +736,7 @@ static void loop() {
         history_graph.add_data(3,total.g3);
         refresh_display();
     } 
-    
+#endif
     if(ts_count>=10 && !disconnected_label.visible()) { // 1 second
         ts_count = 0;
         index = 0;
@@ -721,8 +756,10 @@ static void loop() {
         refresh_display();
         gpu_heat_bar.value(0);
         refresh_display();
+#if LCD_HEIGHT>128
         history_graph.clear_data();
         refresh_display();
+#endif
         disconnected_label.visible(true);
         refresh_display();
     }

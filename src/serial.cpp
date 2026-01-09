@@ -14,20 +14,13 @@
 #define SERIAL_BUF_SIZE (2*SERIAL_QUEUE_SIZE)
 const char* TAG = "Serial";
 
+#ifdef TEST_NO_SERIAL
+#include "esp_random.h"
+static int waiting = 0;
+#endif
+
 bool serial_read_packet(response_t* out_resp) {
-#ifdef ARDUINO
-    int i = SER.read();
-    if(-1<i) {
-        if(i==1) {
-            return 0!=SER.readBytes((uint8_t*)out_resp,sizeof(response_t));
-        } else {
-            while(SER.available()) {
-                SER.read();
-            }
-        }
-    }
-    return false;
-#else
+#ifndef TEST_NO_SERIAL
     uint8_t tmp;
     if(1==uart_read_bytes(UART_NUM_0,&tmp,1,0)) {
         if(tmp==1) {
@@ -37,21 +30,40 @@ bool serial_read_packet(response_t* out_resp) {
         }
     }
     return false;
+#else
+    if(waiting) {
+        out_resp->cpu_tmax = 100;
+        out_resp->gpu_tmax = 80;
+        out_resp->cpu_usage = 50;
+        out_resp->cpu_temp = out_resp->cpu_tmax/2;
+        out_resp->gpu_temp = out_resp->gpu_tmax/2;
+        int variance = (esp_random()%30)-15;
+        out_resp->cpu_usage += variance;
+        variance = (esp_random()%30)-15;
+        out_resp->cpu_usage += variance;
+        variance = (esp_random()%30)-15;
+        out_resp->cpu_temp += variance;
+        variance = (esp_random()%30)-15;
+        out_resp->gpu_temp += variance;
+        return true;
+    }
+    return false;
 #endif
 }
 void serial_write() {
+#ifndef TEST_NO_SERIAL
     char c = 1;
 #ifdef ARDUINO
     SER.write(&c,1);
 #else
     uart_write_bytes(UART_NUM_0,&c,1);
 #endif
+#else
+    waiting = 1;
+#endif
 }
 bool serial_init() {
-#ifdef ARDUINO
-    SER.begin(115200);
-    return true;
-#else
+#ifndef TEST_NO_SERIAL
     esp_log_level_set(TAG, ESP_LOG_INFO);
     /* Configure parameters of an UART driver,
      * communication pins and install the driver */
@@ -71,10 +83,12 @@ bool serial_init() {
     //Set UART pins (using UART0 default pins ie no changes.)
     uart_set_pin(UART_NUM_0, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
     //Create a task to handler UART event from ISR
-    
+#else
+    waiting = 0;
+#endif
     return true;
+#ifndef TEST_NO_SERIAL
 error:
-  
     return false;
 #endif
 }
