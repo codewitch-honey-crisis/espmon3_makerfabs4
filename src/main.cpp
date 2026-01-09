@@ -432,6 +432,7 @@ protected:
                     y = (1.f-fv)*(tenth_y*10);
                     pt2.y =y;
                     draw::line(destination,srect16(floorf(pt.x),floorf(pt.y),ceilf(pt2.x),ceilf(pt2.y)),entry->color);
+                    draw::line(destination,srect16(floorf(pt.x-1),floorf(pt.y-1),ceilf(pt2.x-1),ceilf(pt2.y-1)),entry->color);
                     pt=pt2;
                 }
             }
